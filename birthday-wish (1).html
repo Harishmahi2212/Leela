@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy Birthday</title>
+<style>
+  :root{
+    --bg-1:#0b0620;
+    --bg-2:#1a0f3d;
+    --bg-3:#2d0b4e;
+    --glass:rgba(255,255,255,0.07);
+    --glass-border:rgba(255,255,255,0.18);
+    --grad-a:#ff8a9c;
+    --grad-b:#ffd8a8;
+    --grad-c:#c8a8ff;
+    --text-main:#f5f0ff;
+    --text-soft:#cfc3e8;
+  }
+
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  html,body{
+    height:100%;
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+  }
+
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,138,156,0.12), transparent 40%),
+      radial-gradient(circle at 80% 0%, rgba(200,168,255,0.15), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(255,216,168,0.08), transparent 50%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+    background-attachment: fixed;
+    color: var(--text-main);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px 16px 48px;
+    position:relative;
+  }
+
+  /* ---------- floating particles ---------- */
+  #heartField{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+  }
+  .floating-heart{
+    position:absolute;
+    bottom:-10%;
+    opacity:0;
+    color:#ff9fb3;
+    filter: drop-shadow(0 0 6px rgba(255,120,150,0.5));
+    animation-name: floatUp;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes floatUp{
+    0%{ transform: translateY(0) translateX(0) rotate(0deg) scale(0.8); opacity:0; }
+    10%{ opacity:0.9; }
+    50%{ transform: translateY(-55vh) translateX(10px) rotate(15deg) scale(1); }
+    90%{ opacity:0.5; }
+    100%{ transform: translateY(-110vh) translateX(-10px) rotate(-10deg) scale(0.9); opacity:0; }
+  }
+
+  /* ---------- glass card ---------- */
+  .card{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:420px;
+    background: var(--glass);
+    border:1px solid var(--glass-border);
+    border-radius:28px;
+    padding: 38px 26px 32px;
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.15),
+      0 0 60px rgba(255,138,156,0.08);
+    text-align:center;
+    animation: cardIn 0.9s cubic-bezier(.2,.9,.25,1) both;
+  }
+
+  @keyframes cardIn{
+    from{ opacity:0; transform: translateY(24px) scale(0.97); }
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  .glow-ring{
+    position:absolute;
+    inset:-2px;
+    border-radius:30px;
+    padding:2px;
+    background: linear-gradient(120deg, var(--grad-a), var(--grad-c), var(--grad-b), var(--grad-a));
+    background-size: 300% 300%;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity:0.55;
+    animation: hueDrift 8s ease infinite;
+    pointer-events:none;
+    z-index:-1;
+  }
+  @keyframes hueDrift{
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+  }
+
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color: var(--text-soft);
+    opacity:0.85;
+    margin-bottom:10px;
+  }
+
+  .title{
+    font-size: 30px;
+    line-height:1.15;
+    font-weight:800;
+    margin: 0 0 4px;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-b) 50%, var(--grad-c));
+    background-size: 220% auto;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    animation: shimmer 5s linear infinite;
+  }
+  @keyframes shimmer{
+    to{ background-position: -220% center; }
+  }
+
+  .name{
+    display:inline-block;
+  }
+
+  .subtitle{
+    font-size:14px;
+    color: var(--text-soft);
+    margin-bottom: 22px;
+  }
+
+  .divider{
+    width:56px;
+    height:3px;
+    margin: 6px auto 22px;
+    border-radius:4px;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-c));
+    opacity:0.8;
+  }
+
+  .wish-text{
+    font-size:15.5px;
+    line-height:1.75;
+    color: var(--text-main);
+    text-align:left;
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:18px 18px;
+    margin-bottom:18px;
+  }
+
+  .wish-name-slot{
+    font-weight:700;
+    background: linear-gradient(90deg, var(--grad-a), var(--grad-c));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .tamil-quote{
+    font-size:15px;
+    line-height:1.9;
+    font-style:italic;
+    color:#e6d9ff;
+    text-align:center;
+    padding: 16px 14px;
+    border-radius:16px;
+    background: linear-gradient(135deg, rgba(200,168,255,0.10), rgba(255,138,156,0.06));
+    border: 1px solid rgba(200,168,255,0.22);
+    margin-bottom: 26px;
+    position:relative;
+  }
+  .tamil-quote .sign{
+    display:block;
+    margin-top:10px;
+    font-size:13px;
+    font-style:normal;
+    letter-spacing:1px;
+    color: var(--grad-b);
+    opacity:0.9;
+  }
+
+  /* ---------- CTA button ---------- */
+  .cta-wrap{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    margin-top:6px;
+  }
+
+  .cta{
+    appearance:none;
+    border:none;
+    outline:none;
+    cursor:pointer;
+    position:relative;
+    padding:16px 34px;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:0.4px;
+    color:#1a0f2e;
+    border-radius:999px;
+    background: linear-gradient(90deg, var(--grad-b), var(--grad-a) 60%, var(--grad-c));
+    background-size:200% auto;
+    box-shadow:
+      0 10px 30px rgba(255,138,156,0.35),
+      0 0 0 1px rgba(255,255,255,0.25) inset;
+    transition: transform .15s ease, box-shadow .25s ease, background-position .6s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cta:hover{
+    background-position: 100% center;
+    box-shadow:
+      0 14px 34px rgba(255,138,156,0.45),
+      0 0 0 1px rgba(255,255,255,0.3) inset;
+  }
+  .cta:active{
+    transform: scale(0.94);
+  }
+  .cta.is-active{
+    background: linear-gradient(90deg, #ff6b81, #a78bfa 60%, #ffd8a8);
+    background-size:200% auto;
+    box-shadow:
+      0 10px 30px rgba(167,139,250,0.4),
+      0 0 0 1px rgba(255,255,255,0.3) inset;
+  }
+
+  .hint{
+    margin-top:18px;
+    font-size:12px;
+    color: var(--text-soft);
+    opacity:0.65;
+    animation: pulseHint 2.6s ease-in-out infinite;
+  }
+  @keyframes pulseHint{
+    0%, 100%{ opacity:0.5; }
+    50%{ opacity:0.9; }
+  }
+
+  /* full-screen continuous heart bursts */
+  #rainField{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:40;
+  }
+  .rain-heart{
+    position:absolute;
+    will-change: transform, opacity;
+    animation-name: heartBurst;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+  @keyframes heartBurst{
+    0%{ transform: translate(0,0) scale(0.4) rotate(0deg); opacity:0; }
+    15%{ opacity:1; transform: translate(0,0) scale(1) rotate(var(--spin-mid, 10deg)); }
+    100%{ transform: translate(var(--drift, 0px), -120px) scale(1.3) rotate(var(--spin, 180deg)); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  }
+
+  @media (min-width:480px){
+    .card{ padding: 44px 34px 38px; }
+    .title{ font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+
+  <div id="heartField" aria-hidden="true"></div>
+  <div id="rainField" aria-hidden="true"></div>
+
+  <main class="card">
+    <div class="glow-ring" aria-hidden="true"></div>
+
+    <div class="eyebrow">A little something for you</div>
+    <h1 class="title">Happy Birthday,<br><span class="name">[Friend's Name]</span> 🎂</h1>
+    <div class="subtitle">celebrating you, today &amp; always</div>
+    <div class="divider"></div>
+
+    <p class="wish-text">
+      Knowingly or unknowingly, we met. On this happy day of this year, I have the opportunity to wish you a happy birthday. We have had many heartaches. For all that, I apologize and express my regret. On this happy day, my dear
+      <span class="wish-name-slot">[Friend's Name]</span>,
+      my heartfelt birthday wishes.
+    </p>
+
+    <div class="tamil-quote">
+      நம் இருவருக்கிடையே ஏற்பட்ட இந்த நட்பானது ஒரு மின்னலின் ஒளியை போன்றது
+      <span class="sign">— மின்னலே</span>
+    </div>
+
+    <div class="cta-wrap">
+      <button class="cta" id="celebrateBtn" type="button">🎉 Celebrate</button>
+    </div>
+    <div class="hint" id="hintText">tap to fill the screen with hearts</div>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Floating background hearts ---------------- */
+  var field = document.getElementById('heartField');
+  var HEART_CHARS = ['💖','💕','💗','❤️','💓'];
+  var MAX_FLOATERS = 16;
+
+  function spawnFloater(){
+    if (field.childElementCount >= MAX_FLOATERS) return;
+    var el = document.createElement('div');
+    el.className = 'floating-heart';
+    el.textContent = HEART_CHARS[Math.floor(Math.random()*HEART_CHARS.length)];
+
+    var size = 14 + Math.random()*20;
+    var left = Math.random()*100;
+    var duration = 9 + Math.random()*8;
+    // negative delay = start already mid-animation, so hearts appear
+    // instantly scattered across the screen instead of rising in from below
+    var delay = -Math.random()*duration;
+
+    el.style.left = left + 'vw';
+    el.style.fontSize = size + 'px';
+    el.style.animationDuration = duration + 's';
+    el.style.animationDelay = delay + 's';
+
+    el.addEventListener('animationiteration', function(){
+      el.style.left = (Math.random()*100) + 'vw';
+      el.style.fontSize = (14 + Math.random()*20) + 'px';
+    });
+
+    field.appendChild(el);
+  }
+
+  for (var i=0; i<MAX_FLOATERS; i++){
+    spawnFloater();
+  }
+
+  /* ---------------- Full-screen continuous multi-color heart rain ---------------- */
+  var rainField = document.getElementById('rainField');
+  var btn = document.getElementById('celebrateBtn');
+  var hintText = document.getElementById('hintText');
+  var RAIN_EMOJI = ['❤️','🧡','💛','💚','💙','💜','🩷','🩵','💗','💖','💕','💓','🎉','✨'];
+  var MAX_RAIN = 60;
+  var rainTimer = null;
+  var isRaining = false;
+
+  function spawnRainHeart(){
+    if (rainField.childElementCount >= MAX_RAIN) return;
+
+    var el = document.createElement('div');
+    el.className = 'rain-heart';
+    el.textContent = RAIN_EMOJI[Math.floor(Math.random()*RAIN_EMOJI.length)];
+
+    var size = 18 + Math.random()*26;
+    var left = Math.random()*94;
+    var top = Math.random()*88;
+    var duration = 1.4 + Math.random()*0.8;
+    var drift = (Math.random()*100 - 50) + 'px';
+    var spinMid = (Math.random()*40 - 20) + 'deg';
+    var spin = (Math.random()*200 - 100) + 'deg';
+
+    el.style.left = left + 'vw';
+    el.style.top = top + 'vh';
+    el.style.fontSize = size + 'px';
+    el.style.animationDuration = duration + 's';
+    el.style.setProperty('--drift', drift);
+    el.style.setProperty('--spin-mid', spinMid);
+    el.style.setProperty('--spin', spin);
+
+    rainField.appendChild(el);
+
+    setTimeout(function(){ el.remove(); }, duration*1000 + 100);
+  }
+
+  function startRain(){
+    isRaining = true;
+    btn.classList.add('is-active');
+    btn.textContent = '✋ Stop the Hearts';
+    hintText.textContent = 'hearts everywhere — tap again to stop';
+
+    // burst a handful immediately, then keep a steady continuous stream
+    for (var i=0; i<16; i++){
+      setTimeout(spawnRainHeart, i*30);
+    }
+    rainTimer = setInterval(function(){
+      spawnRainHeart();
+      spawnRainHeart();
+      spawnRainHeart();
+    }, 90);
+  }
+
+  function stopRain(){
+    isRaining = false;
+    btn.classList.remove('is-active');
+    btn.textContent = '🎉 Celebrate';
+    hintText.textContent = 'tap to fill the screen with hearts';
+    if (rainTimer){
+      clearInterval(rainTimer);
+      rainTimer = null;
+    }
+  }
+
+  btn.addEventListener('click', function(){
+    if (isRaining){
+      stopRain();
+    } else {
+      startRain();
+    }
+    btn.style.transform = 'scale(0.94)';
+    setTimeout(function(){ btn.style.transform = ''; }, 140);
+  });
+
+})();
+</script>
+</body>
+</html>
